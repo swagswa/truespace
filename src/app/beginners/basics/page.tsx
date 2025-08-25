@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { GlassButton } from "@/components/ui/glass-button";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function BeginnersBasics() {
   const [likedLessons, setLikedLessons] = useState<number[]>([]);
@@ -63,25 +65,51 @@ export default function BeginnersBasics() {
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="mb-4">
-          <Link href="/beginners" className="inline-block mb-6 mt-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </Link>
+          <AnimatedContainer delay={0} direction="left">
+            <Link href="/beginners" className="inline-block mb-6 mt-4">
+              <motion.svg 
+                className="w-6 h-6 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                viewBox="0 0 24 24"
+                whileHover={{ x: -3, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </motion.svg>
+            </Link>
+          </AnimatedContainer>
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">
-              Основы ИИ
-            </h1>
-            <p className="text-white/80 text-sm mb-8">
-              Фундаментальные знания об искусственном интеллекте
-            </p>
+            <AnimatedContainer delay={0.2} direction="up">
+              <h1 className="text-3xl font-bold text-white mb-4">
+                Основы ИИ
+              </h1>
+            </AnimatedContainer>
+            <AnimatedContainer delay={0.4} direction="up">
+              <p className="text-white/80 text-sm mb-8">
+                Фундаментальные знания об искусственном интеллекте
+              </p>
+            </AnimatedContainer>
           </div>
         </div>
 
         {/* Lessons List */}
-        <div className="space-y-4">
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+        <motion.div 
+          className="space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          {lessons.map((lesson, index) => (
+            <AnimatedContainer key={lesson.id} delay={0.8 + index * 0.1} direction="up">
+              <motion.div 
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+              >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-white mb-2">{lesson.title}</h3>
@@ -134,14 +162,15 @@ export default function BeginnersBasics() {
                 </div>
               )}
               
-              <div className="mt-4">
-                <GlassButton variant="primary" size="sm">
-                  Смотреть урок
-                </GlassButton>
-              </div>
-            </div>
+                <div className="mt-4">
+                  <GlassButton variant="primary" size="sm">
+                    Смотреть урок
+                  </GlassButton>
+                </div>
+              </motion.div>
+            </AnimatedContainer>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

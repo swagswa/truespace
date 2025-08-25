@@ -2,6 +2,8 @@
 
 import { GlassButton } from "@/components/ui/glass-button";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function GraphicAISelection() {
   return (

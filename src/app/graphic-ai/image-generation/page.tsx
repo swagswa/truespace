@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { GlassButton } from "@/components/ui/glass-button";
 import Link from "next/link";
+import { AnimatedContainer } from "@/components/ui/animated-container";
+import { motion } from "framer-motion";
 
 export default function GraphicAIImageGeneration() {
   const [likedLessons, setLikedLessons] = useState<number[]>([]);
@@ -76,26 +78,47 @@ export default function GraphicAIImageGeneration() {
     <div className="flex flex-col items-center min-h-screen p-4 pt-4">
       <div className="w-full max-w-4xl">
         {/* Header */}
-        <div className="mb-4">
-          <Link href="/graphic-ai" className="inline-block mb-6 mt-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </Link>
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">
-              Генерация изображений
-            </h1>
-            <p className="text-white/80 text-sm mb-8">
-              Создание изображений с помощью ИИ: Midjourney, DALL-E, Stable Diffusion
-            </p>
+        <AnimatedContainer delay={0.1}>
+          <div className="mb-4">
+            <Link href="/graphic-ai" className="inline-block mb-6 mt-4">
+              <motion.svg 
+                className="w-6 h-6 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                viewBox="0 0 24 24"
+                whileHover={{ scale: 1.1, x: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </motion.svg>
+            </Link>
+            <div className="text-center">
+              <AnimatedContainer delay={0.2}>
+                <h1 className="text-3xl font-bold text-white mb-4">
+                  Генерация изображений
+                </h1>
+              </AnimatedContainer>
+              <AnimatedContainer delay={0.3}>
+                <p className="text-white/80 text-sm mb-8">
+                  Создание изображений с помощью ИИ: Midjourney, DALL-E, Stable Diffusion
+                </p>
+              </AnimatedContainer>
+            </div>
           </div>
-        </div>
+        </AnimatedContainer>
 
         {/* Lessons List */}
-        <div className="space-y-4">
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+        <AnimatedContainer delay={0.4}>
+          <div className="space-y-4">
+            {lessons.map((lesson, index) => (
+              <AnimatedContainer key={lesson.id} delay={0.5 + index * 0.1}>
+                <motion.div 
+                  className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-white mb-2">{lesson.title}</h3>
@@ -106,32 +129,41 @@ export default function GraphicAIImageGeneration() {
                   </div>
                 </div>
                 <div className="flex gap-2 ml-4">
-                  <button
+                  <motion.button
                     onClick={() => toggleLike(lesson.id)}
                     className={`p-2 rounded-lg transition-colors ${
                       likedLessons.includes(lesson.id)
                         ? 'bg-red-500/20 text-red-400'
                         : 'bg-white/10 text-white/60 hover:text-red-400'
                     }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
                   >
                     ❤️
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={() => toggleComplete(lesson.id)}
                     className={`p-2 rounded-lg transition-colors ${
                       completedLessons.includes(lesson.id)
                         ? 'bg-green-500/20 text-green-400'
                         : 'bg-white/10 text-white/60 hover:text-green-400'
                     }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
                   >
                     ✓
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={() => toggleExpand(lesson.id)}
                     className="p-2 rounded-lg bg-white/10 text-white/60 hover:text-white transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
                   >
                     {expandedLessons.includes(lesson.id) ? '▼' : '▶'}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               
@@ -149,13 +181,21 @@ export default function GraphicAIImageGeneration() {
               )}
               
               <div className="mt-4">
-                <GlassButton variant="primary" size="sm">
-                  Смотреть урок
-                </GlassButton>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <GlassButton variant="primary" size="sm">
+                    Смотреть урок
+                  </GlassButton>
+                </motion.div>
               </div>
-            </div>
-          ))}
-        </div>
+                </motion.div>
+              </AnimatedContainer>
+            ))}
+          </div>
+        </AnimatedContainer>
       </div>
     </div>
   );

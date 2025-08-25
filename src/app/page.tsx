@@ -1,5 +1,11 @@
-import { GlassButton } from "@/components/ui/glass-button";
+"use client";
+import React from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { GlassButton } from "@/components/ui/glass-button";
+import { AnimatedContainer } from "@/components/ui/animated-container";
+import { AnimatedCourseCard } from "@/components/ui/animated-course-card";
+import { AnimatedNavButton } from "@/components/ui/animated-nav-button";
 
 export default function Home() {
   const courses = [
@@ -57,74 +63,80 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-start p-4 pt-8">
-        <div className="w-full max-w-sm">
-          {/* Logo */}
-          <div className="text-center mb-6">
-            <Link href="/admin" className="block mb-2 cursor-pointer hover:opacity-80 transition-opacity">
-              <img src="/logo.svg" alt="TrueSpace Logo" className="w-24 h-24 mx-auto filter brightness-0 invert" />
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="text-center mb-6">
+          <AnimatedContainer delay={0} scale={true}>
+            <Link href="/admin" className="block mb-2 cursor-pointer">
+              <motion.img 
+                src="/logo.svg" 
+                alt="TrueSpace Logo" 
+                className="w-24 h-24 mx-auto filter brightness-0 invert"
+                whileHover={{ 
+                  scale: 1.1, 
+                  rotate: 12,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.95 }}
+              />
             </Link>
+          </AnimatedContainer>
+          <AnimatedContainer delay={0.2} direction="up">
             <h1 className="text-2xl font-bold text-white mb-2">
               TrueSpace
             </h1>
+          </AnimatedContainer>
+          <AnimatedContainer delay={0.4} direction="up">
             <p className="text-white/80 text-sm mb-4">
               Образовательная платформа
             </p>
-            
-            {/* Navigation buttons */}
-             <div className="flex gap-2 mb-6">
-                <Link href="/favorites" className="flex-1">
-                  <GlassButton variant="primary" size="md" className="w-full py-4 text-white">
-                      <div className="flex items-center justify-center gap-2">
-                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                        Избранное
-                      </div>
-                    </GlassButton>
-                </Link>
-                <Link href="/completed" className="flex-1">
-                    <GlassButton variant="secondary" size="md" className="w-full py-4 text-white">
-                      <div className="flex items-center justify-center gap-2">
-                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        Завершенные
-                      </div>
-                    </GlassButton>
-                </Link>
-              </div>
-          </div>
-
-          {/* Course Cards */}
-          <div className="flex flex-col gap-3">
-            {courses.map((course, index) => {
-              const CourseCard = (
-                <GlassButton 
-                  key={index}
-                  size="lg" 
-                  className="text-white w-full text-left p-4 h-auto hover:scale-102 transition-all duration-300"
-                  variant="default"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="text-white">{course.icon}</div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-base mb-1">{course.title}</div>
-                      <div className="text-white/70 text-sm">{course.description}</div>
-                    </div>
-                  </div>
-                </GlassButton>
-              );
-              
-              return course.href ? (
-                <Link key={index} href={course.href}>
-                  {CourseCard}
-                </Link>
-              ) : (
-                CourseCard
-              );
-            })}
+          </AnimatedContainer>
+          
+          {/* Navigation buttons */}
+          <div className="flex gap-2 mb-6">
+            <AnimatedNavButton
+              href="/favorites"
+              variant="primary"
+              index={0}
+              icon={
+                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              }
+            >
+              Избранное
+            </AnimatedNavButton>
+            <AnimatedNavButton
+              href="/completed"
+              variant="secondary"
+              index={1}
+              icon={
+                <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              }
+            >
+              Завершенные
+            </AnimatedNavButton>
           </div>
         </div>
+
+        {/* Course Cards */}
+        <motion.div 
+          className="flex flex-col gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
+          {courses.map((course, index) => (
+            <AnimatedCourseCard 
+              key={index}
+              course={course}
+              index={index + 2}
+            />
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }

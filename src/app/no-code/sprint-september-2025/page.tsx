@@ -3,6 +3,8 @@
 import { GlassButton } from "@/components/ui/glass-button";
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function NoCodeSprint() {
   const [lessons, setLessons] = useState([
@@ -79,32 +81,65 @@ export default function NoCodeSprint() {
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="mb-4">
-          <Link href="/no-code" className="inline-block mb-6 mt-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </Link>
+          <AnimatedContainer delay={0} direction="left">
+            <Link href="/no-code" className="inline-block mb-6 mt-4">
+              <motion.svg 
+                className="w-6 h-6 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                viewBox="0 0 24 24"
+                whileHover={{ x: -3, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </motion.svg>
+            </Link>
+          </AnimatedContainer>
           <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            <h1 className="text-2xl font-bold text-white">
-              Спринт Сентябрь 2025
-            </h1>
-          </div>
-          <p className="text-white/80 text-sm mb-6">
-            Актуальные уроки по No-Code разработке
-          </p>
+            <AnimatedContainer delay={0.2} direction="up">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <motion.svg 
+                  className="w-6 h-6 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  viewBox="0 0 24 24"
+                  whileHover={{ rotate: 5, scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </motion.svg>
+                <h1 className="text-2xl font-bold text-white">
+                  Спринт Сентябрь 2025
+                </h1>
+              </div>
+            </AnimatedContainer>
+            <AnimatedContainer delay={0.4} direction="up">
+              <p className="text-white/80 text-sm mb-6">
+                Актуальные уроки по No-Code разработке
+              </p>
+            </AnimatedContainer>
           </div>
         </div>
 
         {/* Lessons List */}
-        <div className="flex flex-col gap-3">
+        <motion.div 
+          className="flex flex-col gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
           {lessons.length > 0 ? (
             lessons.map((lesson, index) => (
-              <div key={lesson.id}>
-                <GlassButton 
+              <AnimatedContainer key={lesson.id} delay={0.8 + index * 0.1} direction="up">
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <GlassButton 
                   size="md" 
                   className="text-white w-full text-left p-4 h-auto mb-3"
                   variant="default"
@@ -200,19 +235,30 @@ export default function NoCodeSprint() {
                       </div>
                     </div>
                   )}
-                </GlassButton>
-              </div>
+                  </GlassButton>
+                </motion.div>
+              </AnimatedContainer>
             ))
           ) : (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-              </svg>
-              <h3 className="text-white/60 text-lg font-medium mb-2">Нет уроков</h3>
-              <p className="text-white/40 text-sm">Уроки появятся здесь, когда вы их добавите</p>
-            </div>
+            <AnimatedContainer delay={0.8} direction="up">
+              <div className="text-center py-12">
+                <motion.svg 
+                  className="w-16 h-16 text-white/40 mx-auto mb-4" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1" 
+                  viewBox="0 0 24 24"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </motion.svg>
+                <h3 className="text-white/60 text-lg font-medium mb-2">Нет уроков</h3>
+                <p className="text-white/40 text-sm">Уроки появятся здесь, когда вы их добавите</p>
+              </div>
+            </AnimatedContainer>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

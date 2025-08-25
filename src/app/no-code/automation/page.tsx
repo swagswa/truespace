@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { GlassButton } from "@/components/ui/glass-button";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function NoCodeAutomation() {
   const [likedLessons, setLikedLessons] = useState<number[]>([]);
@@ -70,25 +72,46 @@ export default function NoCodeAutomation() {
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="mb-4">
-          <Link href="/no-code" className="inline-block mb-6 mt-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </Link>
+          <AnimatedContainer delay={0.1} direction="up">
+            <Link href="/no-code" className="inline-block mb-6 mt-4">
+              <motion.svg 
+                className="w-6 h-6 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                viewBox="0 0 24 24"
+                whileHover={{ scale: 1.1, x: -2 }}
+                transition={{ duration: 0.2 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </motion.svg>
+            </Link>
+          </AnimatedContainer>
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">
-              Автоматизация
-            </h1>
-            <p className="text-white/80 text-sm mb-8">
-              Создание автоматизированных процессов и интеграций
-            </p>
+            <AnimatedContainer delay={0.2} direction="up">
+              <h1 className="text-3xl font-bold text-white mb-4">
+                Автоматизация
+              </h1>
+            </AnimatedContainer>
+            <AnimatedContainer delay={0.3} direction="up">
+              <p className="text-white/80 text-sm mb-8">
+                Создание автоматизированных процессов и интеграций
+              </p>
+            </AnimatedContainer>
           </div>
         </div>
 
         {/* Lessons List */}
-        <div className="space-y-4">
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+        <AnimatedContainer delay={0.4} direction="up">
+          <div className="space-y-4">
+            {lessons.map((lesson, index) => (
+              <motion.div 
+                key={lesson.id} 
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+              >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-white mb-2">{lesson.title}</h3>
@@ -99,32 +122,38 @@ export default function NoCodeAutomation() {
                   </div>
                 </div>
                 <div className="flex gap-2 ml-4">
-                  <button
+                  <motion.button
                     onClick={() => toggleLike(lesson.id)}
                     className={`p-2 rounded-lg transition-colors ${
                       likedLessons.includes(lesson.id)
                         ? 'bg-red-500/20 text-red-400'
                         : 'bg-white/10 text-white/60 hover:text-red-400'
                     }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     ❤️
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={() => toggleComplete(lesson.id)}
                     className={`p-2 rounded-lg transition-colors ${
                       completedLessons.includes(lesson.id)
                         ? 'bg-green-500/20 text-green-400'
                         : 'bg-white/10 text-white/60 hover:text-green-400'
                     }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     ✓
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={() => toggleExpand(lesson.id)}
                     className="p-2 rounded-lg bg-white/10 text-white/60 hover:text-white transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     {expandedLessons.includes(lesson.id) ? '▼' : '▶'}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               
@@ -141,14 +170,19 @@ export default function NoCodeAutomation() {
                 </div>
               )}
               
-              <div className="mt-4">
+              <motion.div 
+                className="mt-4"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <GlassButton variant="primary" size="sm">
                   Смотреть урок
                 </GlassButton>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatedContainer>
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
 "use client";
 
 import { GlassButton } from "@/components/ui/glass-button";
+import { AnimatedContainer } from "@/components/ui/animated-container";
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Webinars() {
   const [lessons, setLessons] = useState([
@@ -79,36 +81,67 @@ export default function Webinars() {
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="mb-4">
-          <Link href="/" className="inline-block mb-6 mt-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </Link>
+          <AnimatedContainer delay={0} direction="left">
+            <Link href="/" className="inline-block mb-6 mt-4">
+              <motion.svg 
+                className="w-6 h-6 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                viewBox="0 0 24 24"
+                whileHover={{ x: -5, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </motion.svg>
+            </Link>
+          </AnimatedContainer>
           <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-            <h1 className="text-2xl font-bold text-white">
-              Вебинары
-            </h1>
-          </div>
-          <p className="text-white/80 text-sm mb-6">
-            Онлайн-обучение и мастер-классы
-          </p>
+            <AnimatedContainer delay={0.2} direction="up">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <motion.svg 
+                  className="w-6 h-6 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  viewBox="0 0 24 24"
+                  whileHover={{ rotate: 5, scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </motion.svg>
+                <h1 className="text-2xl font-bold text-white">
+                  Вебинары
+                </h1>
+              </div>
+            </AnimatedContainer>
+            <AnimatedContainer delay={0.4} direction="up">
+              <p className="text-white/80 text-sm mb-6">
+                Онлайн-обучение и мастер-классы
+              </p>
+            </AnimatedContainer>
           </div>
         </div>
 
         {/* Lessons List */}
-        <div className="flex flex-col gap-3">
+        <motion.div 
+          className="flex flex-col gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
           {lessons.length > 0 ? (
             lessons.map((lesson, index) => (
-              <div key={lesson.id}>
-                <GlassButton 
+              <AnimatedContainer key={lesson.id} delay={0.8 + index * 0.1} direction="up">
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <GlassButton 
                   size="md" 
                   className="text-white w-full text-left p-4 h-auto mb-3"
                   variant="default"
-                  onClick={() => toggleExpanded(lesson.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col gap-2 flex-1">
@@ -169,6 +202,10 @@ export default function Webinars() {
                           stroke="currentColor" 
                           strokeWidth="2" 
                           viewBox="0 0 24 24"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleExpanded(lesson.id);
+                          }}
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
@@ -200,19 +237,30 @@ export default function Webinars() {
                       </div>
                     </div>
                   )}
-                </GlassButton>
-              </div>
+                  </GlassButton>
+                </motion.div>
+              </AnimatedContainer>
             ))
           ) : (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-              </svg>
-              <h3 className="text-white/60 text-lg font-medium mb-2">Нет вебинаров</h3>
-              <p className="text-white/40 text-sm">Вебинары появятся здесь, когда вы их добавите</p>
-            </div>
+            <AnimatedContainer delay={0.8} direction="up">
+              <div className="text-center py-12">
+                <motion.svg 
+                  className="w-16 h-16 text-white/40 mx-auto mb-4" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1" 
+                  viewBox="0 0 24 24"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </motion.svg>
+                <h3 className="text-white/60 text-lg font-medium mb-2">Нет вебинаров</h3>
+                <p className="text-white/40 text-sm">Вебинары появятся здесь, когда вы их добавите</p>
+              </div>
+            </AnimatedContainer>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
