@@ -1,6 +1,6 @@
 "use client";
 
-import { GlassButton } from "@/components/ui/glass-button";
+import { LessonCard } from "@/components/ui/lesson-card";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -9,113 +9,54 @@ import { AnimatedContainer } from "@/components/ui/animated-container";
 export default function GraphicAIArchive() {
   const [lessons, setLessons] = useState([
     {
-      id: 1,
+      id: "1",
       title: "Основы Midjourney",
       description: "Введение в создание изображений с помощью Midjourney. Базовые команды, параметры и техники промптинга.",
       liked: true,
       completed: true,
       isExpanded: false,
       date: "Август 2025",
-    },
-    {
-      id: 2,
-      title: "DALL-E 3 и ChatGPT",
-      description: "Создание изображений через DALL-E 3 в ChatGPT. Оптимизация промптов и работа с различными стилями.",
-      liked: false,
-      completed: true,
-      isExpanded: false,
-      date: "Июль 2025",
-    },
-    {
-      id: 3,
-      title: "Stable Diffusion локально",
-      description: "Установка и настройка Stable Diffusion на локальном компьютере. Работа с моделями и LoRA.",
-      liked: true,
-      completed: false,
-      isExpanded: false,
-      date: "Июнь 2025",
-    },
-    {
-      id: 4,
-      title: "Leonardo AI для дизайна",
-      description: "Использование Leonardo AI для создания концепт-арта, логотипов и дизайнерских решений.",
-      liked: false,
-      completed: true,
-      isExpanded: false,
-      date: "Май 2025",
-    },
-    {
-      id: 5,
-      title: "Runway ML и видео",
-      description: "Создание и редактирование видео с помощью ИИ в Runway ML. Анимация изображений и генерация видео.",
-      liked: true,
-      completed: false,
-      isExpanded: false,
-      date: "Апрель 2025",
-    },
-    {
-      id: 6,
-      title: "Adobe Firefly интеграция",
-      description: "Работа с Adobe Firefly в Creative Suite. Генеративная заливка и создание текстур.",
-      liked: false,
-      completed: true,
-      isExpanded: false,
-      date: "Март 2025",
-    },
-    {
-      id: 7,
-      title: "Canva AI инструменты",
-      description: "Использование ИИ-функций в Canva для быстрого создания дизайнов и презентаций.",
-      liked: true,
-      completed: true,
-      isExpanded: false,
-      date: "Февраль 2025",
-    },
-    {
-      id: 8,
-      title: "Photoshop AI и нейрофильтры",
-      description: "Работа с нейронными фильтрами в Photoshop. Генеративное расширение и умная ретушь.",
-      liked: false,
-      completed: false,
-      isExpanded: false,
-      date: "Январь 2025",
-    },
-    {
-      id: 9,
-      title: "Figma AI плагины",
-      description: "Обзор и использование ИИ-плагинов в Figma для автоматизации дизайн-процессов.",
-      liked: true,
-      completed: true,
-      isExpanded: false,
-      date: "Декабрь 2024",
-    },
-    {
-      id: 10,
-      title: "Upscaling и улучшение качества",
-      description: "Техники улучшения качества изображений с помощью ИИ. Real-ESRGAN, Waifu2x и другие инструменты.",
-      liked: false,
-      completed: false,
-      isExpanded: false,
-      date: "Ноябрь 2024",
-    },
+    }
   ]);
 
-  const toggleLike = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, liked: !lesson.liked } : lesson
-    ));
+  const [likedLessons, setLikedLessons] = useState<Set<string>>(new Set(["1"]));
+  const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set(["1"]));
+  const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set());
+
+  const toggleLike = (id: string) => {
+    setLikedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
-  const toggleCompleted = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, completed: !lesson.completed } : lesson
-    ));
+  const toggleCompleted = (id: string) => {
+    setCompletedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
-  const toggleExpanded = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, isExpanded: !lesson.isExpanded } : lesson
-    ));
+  const toggleExpanded = (id: string) => {
+    setExpandedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -176,110 +117,18 @@ export default function GraphicAIArchive() {
           {lessons.length > 0 ? (
             lessons.map((lesson, index) => (
               <AnimatedContainer key={lesson.id} delay={0.8 + index * 0.1} direction="up">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <GlassButton 
-                    size="md" 
-                    className="text-white w-full text-left p-4 h-auto mb-3"
-                    variant="default"
-                  onClick={() => toggleExpanded(lesson.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="flex items-center gap-3">
-                        <span className="text-white/60 font-medium">
-                          #{lesson.id}
-                        </span>
-                        <h3 className="text-white font-semibold">
-                          {lesson.title}
-                        </h3>
-                        
-                      </div>
-                      {!lesson.isExpanded && (
-                        <p className="text-white/50 text-xs ml-8 max-w-[200px]">
-                          {lesson.description.substring(0, 50)}...
-                        </p>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.liked ? 'text-red-500' : 'text-white/40 hover:text-red-400'
-                          }`}
-                          fill={lesson.liked ? 'currentColor' : 'none'}
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                      </div>
-                      <div>
-                        <svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.completed ? 'text-green-500' : 'text-white/40 hover:text-green-400'
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCompleted(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
-                      </div>
-                      <div>
-                        <svg 
-                          className="w-5 h-5 text-white/60 cursor-pointer hover:text-white"
-                          fill="none" 
-                          stroke="currentColor" 
-                          strokeWidth="2" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {lesson.isExpanded && (
-                    <div className="mt-4 overflow-hidden">
-                      <div className="pt-4 border-t border-white/20">
-                          <p className="text-white/70 mb-4 text-sm">
-                            {lesson.description}
-                          </p>
+                <LessonCard
+                  lesson={lesson}
+                  isLiked={likedLessons.has(lesson.id)}
+                  isCompleted={completedLessons.has(lesson.id)}
+                  isExpanded={expandedLessons.has(lesson.id)}
+                  onToggleLike={() => toggleLike(lesson.id)}
+                  onToggleComplete={() => toggleCompleted(lesson.id)}
+                  onToggleExpand={() => toggleExpanded(lesson.id)}
+                />
 
-                        <div 
-                          className="w-full py-2 px-3 rounded-lg bg-white hover:bg-white/90 transition-colors duration-200 cursor-pointer border border-white/20"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Здесь можно добавить логику для просмотра урока
-                          }}
-                        >
-                          <div className="flex items-center justify-center gap-2 text-black text-sm font-medium">
-                            Смотреть урок
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </GlassButton>
-                </motion.div>
+                  
+
               </AnimatedContainer>
             ))
           ) : (

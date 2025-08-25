@@ -1,6 +1,7 @@
 "use client";
 
 import { GlassButton } from "@/components/ui/glass-button";
+import { LessonCard } from "@/components/ui/lesson-card";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -9,7 +10,7 @@ import { AnimatedContainer } from "@/components/ui/animated-container";
 export default function SprintSeptember2025() {
   const [lessons, setLessons] = useState([
     {
-      id: 1,
+      id: "1",
       title: "Введение в AI агентов",
       description: "Основы создания и настройки AI агентов для автоматизации задач. Изучите принципы работы, архитектуру и возможности современных AI систем.",
       liked: false,
@@ -17,7 +18,7 @@ export default function SprintSeptember2025() {
       isExpanded: false,
     },
     {
-      id: 2,
+      id: "2",
       title: "Настройка окружения для разработки",
       description: "Пошаговое руководство по установке и настройке всех необходимых инструментов для разработки AI агентов. Включает Python, библиотеки и IDE.",
       liked: true,
@@ -25,7 +26,7 @@ export default function SprintSeptember2025() {
       isExpanded: false,
     },
     {
-      id: 3,
+      id: "3",
       title: "Создание первого AI агента",
       description: "Практическое создание простого AI агента с нуля. Изучите основные компоненты, структуру кода и принципы взаимодействия с API.",
       liked: false,
@@ -33,7 +34,7 @@ export default function SprintSeptember2025() {
       isExpanded: false,
     },
     {
-      id: 4,
+      id: "4",
       title: "Обучение и тонкая настройка модели",
       description: "Методы обучения AI агентов на собственных данных. Техники fine-tuning, оптимизация параметров и улучшение производительности.",
       liked: true,
@@ -41,7 +42,7 @@ export default function SprintSeptember2025() {
       isExpanded: false,
     },
     {
-      id: 5,
+      id: "5",
       title: "Интеграция с внешними сервисами",
       description: "Подключение AI агентов к различным API и сервисам. Работа с базами данных, веб-сервисами и облачными платформами.",
       liked: false,
@@ -49,7 +50,7 @@ export default function SprintSeptember2025() {
       isExpanded: false,
     },
     {
-      id: 6,
+      id: "6",
       title: "Мониторинг и отладка AI агентов",
       description: "Инструменты и методы для отслеживания работы AI агентов. Логирование, метрики производительности и диагностика ошибок.",
       liked: false,
@@ -58,22 +59,26 @@ export default function SprintSeptember2025() {
     },
   ]);
 
-  const toggleLike = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, liked: !lesson.liked } : lesson
-    ));
+  const [likedLessons, setLikedLessons] = useState<string[]>(["2", "4"]);
+  const [completedLessons, setCompletedLessons] = useState<string[]>(["2", "6"]);
+  const [expandedLessons, setExpandedLessons] = useState<string[]>([]);
+
+  const toggleLike = (id: string) => {
+    setLikedLessons(prev => 
+      prev.includes(id) ? prev.filter(lessonId => lessonId !== id) : [...prev, id]
+    );
   };
 
-  const toggleCompleted = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, completed: !lesson.completed } : lesson
-    ));
+  const toggleCompleted = (id: string) => {
+    setCompletedLessons(prev => 
+      prev.includes(id) ? prev.filter(lessonId => lessonId !== id) : [...prev, id]
+    );
   };
 
-  const toggleExpanded = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, isExpanded: !lesson.isExpanded } : lesson
-    ));
+  const toggleExpanded = (id: string) => {
+    setExpandedLessons(prev => 
+      prev.includes(id) ? prev.filter(lessonId => lessonId !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -134,112 +139,15 @@ export default function SprintSeptember2025() {
           {lessons.length > 0 ? (
             lessons.map((lesson, index) => (
               <AnimatedContainer key={lesson.id} delay={0.9 + index * 0.1} direction="up">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <GlassButton 
-                  size="md" 
-                  className="text-white w-full text-left p-4 h-auto mb-3"
-                  variant="default"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="flex items-center gap-3">
-                        <span className="text-white/60 font-medium">
-                          #{lesson.id}
-                        </span>
-                        <h3 className="text-white font-semibold">
-                          {lesson.title}
-                        </h3>
-                      </div>
-                      {!lesson.isExpanded && (
-                        <p className="text-white/50 text-xs ml-8 max-w-[200px]">
-                          {lesson.description.substring(0, 50)}...
-                        </p>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.liked ? 'text-red-500' : 'text-white/40 hover:text-red-400'
-                          }`}
-                          fill={lesson.liked ? 'currentColor' : 'none'}
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                      </div>
-                      <div>
-                        <svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.completed ? 'text-green-500' : 'text-white/40 hover:text-green-400'
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCompleted(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
-                      </div>
-                      <div>
-                        <svg 
-                          className="w-5 h-5 text-white/60 cursor-pointer hover:text-white"
-                          fill="none" 
-                          stroke="currentColor" 
-                          strokeWidth="2" 
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleExpanded(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {lesson.isExpanded && (
-                    <div className="mt-4 overflow-hidden">
-                      <div className="pt-4 border-t border-white/20">
-                          <p className="text-white/70 mb-4 text-sm">
-                            {lesson.description}
-                          </p>
-
-                        <div 
-                          className="w-full py-2 px-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200 cursor-pointer border border-white/20"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Здесь можно добавить логику для просмотра урока
-                          }}
-                        >
-                          <div className="flex items-center justify-center gap-2 text-white text-sm">
-                            Смотреть урок
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </GlassButton>
-                </motion.div>
+                <LessonCard
+                  lesson={lesson}
+                  isLiked={likedLessons.includes(lesson.id)}
+                  isCompleted={completedLessons.includes(lesson.id)}
+                  isExpanded={expandedLessons.includes(lesson.id)}
+                  onToggleLike={() => toggleLike(lesson.id)}
+                  onToggleComplete={() => toggleCompleted(lesson.id)}
+                  onToggleExpand={() => toggleExpanded(lesson.id)}
+                />
               </AnimatedContainer>
             ))
           ) : (

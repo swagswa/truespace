@@ -21,11 +21,9 @@ const GlassButton = ({
   const baseClasses = `
     glass-button
     transition-all duration-500 ease-out
-    transform hover:scale-[1.02] active:scale-[0.98]
-    hover:shadow-lg hover:shadow-white/10
+    transform
     focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent
     disabled:opacity-50 disabled:cursor-not-allowed
-    disabled:hover:scale-100 disabled:hover:shadow-none
     will-change-transform
     backface-visibility-hidden
   `;
@@ -37,11 +35,11 @@ const GlassButton = ({
   };
 
   const variantClasses = {
-    default: 'hover:bg-white/10 hover:backdrop-blur-xl',
-    hover: 'hover:bg-white/15 hover:border-white/30 hover:backdrop-blur-xl',
+    default: '',
+    hover: '',
     active: 'bg-white/15 border-white/30 backdrop-blur-xl',
-    primary: 'hover:bg-white/12 hover:backdrop-blur-xl hover:border-white/20',
-    secondary: 'hover:bg-white/8 hover:backdrop-blur-xl hover:border-white/15'
+    primary: '',
+    secondary: ''
   };
 
   return (

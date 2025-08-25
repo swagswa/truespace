@@ -1,6 +1,6 @@
 "use client";
 
-import { GlassButton } from "@/components/ui/glass-button";
+import { LessonCard } from "@/components/ui/lesson-card";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -9,96 +9,57 @@ import { AnimatedContainer } from "@/components/ui/animated-container";
 export default function NoCodeArchive() {
   const [lessons, setLessons] = useState([
     {
-      id: 1,
+      id: "1",
       title: "Введение в no-code ИИ",
       description: "Обзор no-code платформ для работы с искусственным интеллектом. Преимущества и ограничения визуального программирования.",
       liked: false,
       completed: true,
       isExpanded: false,
       date: "Август 2025",
-    },
-    {
-      id: 2,
-      title: "Zapier и автоматизация с ИИ",
-      description: "Создание автоматизированных рабочих процессов с использованием ИИ в Zapier. Интеграция с ChatGPT и другими сервисами.",
-      liked: true,
-      completed: true,
-      isExpanded: false,
-      date: "Июль 2025",
-    },
-    {
-      id: 3,
-      title: "Bubble и ИИ-приложения",
-      description: "Разработка веб-приложений с ИИ-функциями в Bubble. Интеграция API машинного обучения без программирования.",
-      liked: false,
-      completed: false,
-      isExpanded: false,
-      date: "Июнь 2025",
-    },
-    {
-      id: 4,
-      title: "Airtable и умные базы данных",
-      description: "Создание интеллектуальных баз данных в Airtable. Автоматическая категоризация и анализ данных с помощью ИИ.",
-      liked: true,
-      completed: true,
-      isExpanded: false,
-      date: "Май 2025",
-    },
-    {
-      id: 5,
-      title: "Notion AI для продуктивности",
-      description: "Использование ИИ-возможностей Notion для создания контента, планирования и организации рабочих процессов.",
-      liked: false,
-      completed: false,
-      isExpanded: false,
-      date: "Апрель 2025",
-    },
-    {
-      id: 6,
-      title: "Chatbot-платформы без кода",
-      description: "Создание умных чат-ботов с помощью Chatfuel, ManyChat и других no-code платформ. Интеграция с ИИ-сервисами.",
-      liked: true,
-      completed: true,
-      isExpanded: false,
-      date: "Март 2025",
-    },
-    {
-      id: 7,
-      title: "Webflow и ИИ-интеграции",
-      description: "Добавление ИИ-функций на веб-сайты, созданные в Webflow. Персонализация контента и умные формы.",
-      liked: false,
-      completed: false,
-      isExpanded: false,
-      date: "Февраль 2025",
-    },
-    {
-      id: 8,
-      title: "Make (Integromat) для ИИ-автоматизации",
-      description: "Создание сложных сценариев автоматизации с ИИ в Make. Обработка данных и принятие решений без кода.",
-      liked: true,
-      completed: false,
-      isExpanded: false,
-      date: "Январь 2025",
-    },
+    }
   ]);
 
-  const toggleLike = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, liked: !lesson.liked } : lesson
-    ));
+  const [likedLessons, setLikedLessons] = useState<Set<string>>(new Set());
+  const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set(["1"]));
+  const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set());
+
+  const toggleLike = (id: string) => {
+    setLikedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
-  const toggleCompleted = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, completed: !lesson.completed } : lesson
-    ));
+  const toggleCompleted = (id: string) => {
+    setCompletedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
-  const toggleExpanded = (id: number) => {
-    setLessons(lessons.map(lesson => 
-      lesson.id === id ? { ...lesson, isExpanded: !lesson.isExpanded } : lesson
-    ));
+  const toggleExpanded = (id: string) => {
+    setExpandedLessons(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
+
+
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 pt-4">
@@ -144,120 +105,16 @@ export default function NoCodeArchive() {
           <div className="flex flex-col gap-3">
             {lessons.length > 0 ? (
               lessons.map((lesson, index) => (
-                <motion.div 
+                <LessonCard
                   key={lesson.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                >
-                <GlassButton 
-                  size="md" 
-                  className="text-white w-full text-left p-4 h-auto mb-3"
-                  variant="default"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="flex items-center gap-3">
-                        <span className="text-white/60 font-medium">
-                          #{lesson.id}
-                        </span>
-                        <h3 className="text-white font-semibold">
-                          {lesson.title}
-                        </h3>
-                        
-                      </div>
-                      {!lesson.isExpanded && (
-                        <p className="text-white/50 text-xs ml-8 max-w-[200px]">
-                          {lesson.description.substring(0, 50)}...
-                        </p>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <motion.svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.liked ? 'text-red-500' : 'text-white/40 hover:text-red-400'
-                          }`}
-                          fill={lesson.liked ? 'currentColor' : 'none'}
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(lesson.id);
-                          }}
-                          animate={lesson.liked ? { scale: [1, 1.2, 1] } : {}}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </motion.svg>
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <motion.svg 
-                          className={`w-5 h-5 cursor-pointer transition-colors duration-200 ${
-                            lesson.completed ? 'text-green-500' : 'text-white/40 hover:text-green-400'
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCompleted(lesson.id);
-                          }}
-                          animate={lesson.completed ? { scale: [1, 1.2, 1] } : {}}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                        </motion.svg>
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.1, rotate: 180 }} whileTap={{ scale: 0.9 }}>
-                        <svg 
-                          className="w-5 h-5 text-white/60 cursor-pointer hover:text-white"
-                          fill="none" 
-                          stroke="currentColor" 
-                          strokeWidth="2" 
-                          viewBox="0 0 24 24"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleExpanded(lesson.id);
-                          }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                      </motion.div>
-                    </div>
-                  </div>
-                  
-                  {lesson.isExpanded && (
-                    <div className="mt-4 overflow-hidden">
-                      <div className="pt-4 border-t border-white/20">
-                          <p className="text-white/70 mb-4 text-sm">
-                            {lesson.description}
-                          </p>
-
-                        <motion.div 
-                          className="w-full py-2 px-3 rounded-lg bg-white hover:bg-white/90 transition-colors duration-200 cursor-pointer border border-white/20"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Здесь можно добавить логику для просмотра урока
-                          }}
-                          whileHover={{ scale: 1.02, y: -1 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div className="flex items-center justify-center gap-2 text-black text-sm font-medium">
-                            Смотреть урок
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                          </div>
-                        </motion.div>
-                      </div>
-                    </div>
-                  )}
-                </GlassButton>
-                </motion.div>
+                  lesson={lesson}
+                  isLiked={likedLessons.has(lesson.id)}
+                  isCompleted={completedLessons.has(lesson.id)}
+                  isExpanded={expandedLessons.has(lesson.id)}
+                  onToggleLike={() => toggleLike(lesson.id)}
+                  onToggleComplete={() => toggleCompleted(lesson.id)}
+                  onToggleExpand={() => toggleExpanded(lesson.id)}
+                />
               ))
             ) : (
               <motion.div 
