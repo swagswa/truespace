@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function NoCodeSprint() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
       title: "Введение в No-Code разработку",

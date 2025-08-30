@@ -32,7 +32,7 @@ function createBeam(width: number, height: number): Beam {
         length: height * 2.5,
         angle: angle,
         speed: 0.6 + Math.random() * 1.2,
-        opacity: 0.12 + Math.random() * 0.16,
+        opacity: 0.18 + Math.random() * 0.20,
         hue: 190 + Math.random() * 70,
         pulse: Math.random() * Math.PI * 2,
         pulseSpeed: 0.02 + Math.random() * 0.03,
@@ -49,13 +49,12 @@ export function BeamsBackground({
     const isMobileRef = useRef<boolean>(false);
     const MINIMUM_BEAMS = 20;
 
-    const opacityMap = {
-        subtle: 0.7,
-        medium: 0.85,
-        strong: 1,
-    };
-
     useEffect(() => {
+        const opacityMap = {
+            subtle: 0.7,
+            medium: 0.85,
+            strong: 1,
+        };
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -76,8 +75,8 @@ export function BeamsBackground({
             canvas.style.height = `${window.innerHeight}px`;
             ctx.scale(mobileDpr, mobileDpr);
 
-            // Адаптивное количество лучей
-            const beamMultiplier = isMobileRef.current ? 0.7 : 1.5;
+            // Адаптивное количество лучей - увеличиваем для мобильных
+            const beamMultiplier = isMobileRef.current ? 1.2 : 1.5;
             const totalBeams = Math.floor(MINIMUM_BEAMS * beamMultiplier);
             beamsRef.current = Array.from({ length: totalBeams }, () =>
                 createBeam(canvas.width, canvas.height)
@@ -101,7 +100,7 @@ export function BeamsBackground({
             beam.width = 100 + Math.random() * 100;
             beam.speed = 0.5 + Math.random() * 0.4;
             beam.hue = 190 + (index * 70) / totalBeams;
-            beam.opacity = 0.2 + Math.random() * 0.1;
+            beam.opacity = isMobileRef.current ? 0.25 + Math.random() * 0.15 : 0.2 + Math.random() * 0.1;
             return beam;
         }
 
@@ -153,8 +152,8 @@ export function BeamsBackground({
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Адаптивное размытие для мобильных
-            const blurAmount = isMobileRef.current ? "20px" : "35px";
+            // Адаптивное размытие для мобильных - делаем более консистентным
+            const blurAmount = isMobileRef.current ? "30px" : "35px";
             ctx.filter = `blur(${blurAmount})`;
 
             const totalBeams = beamsRef.current.length;

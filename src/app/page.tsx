@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { GlassButton } from "@/components/ui/glass-button";
+
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { AnimatedCourseCard } from "@/components/ui/animated-course-card";
 import { AnimatedNavButton } from "@/components/ui/animated-nav-button";

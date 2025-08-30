@@ -6,24 +6,92 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
+interface Lesson {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  lessonType: string;
+  webinarCategory?: string;
+  contentUrl: string;
+  tags: string[];
+  createdAt: string;
+}
+
+
+
 export default function AdminPanel() {
   const [newLesson, setNewLesson] = useState({
     title: "",
     description: "",
-    category: "webinars"
+    category: "webinars",
+    lessonType: "archive",
+    webinarCategory: "AI Агенты", // Подкатегория для вебинаров
+    contentUrl: "",
+    tags: ""
   });
 
   const [showForm, setShowForm] = useState(true);
 
-  const addLesson = () => {
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const resetForm = () => {
+    setNewLesson({
+      title: "",
+      description: "",
+      category: "webinars",
+      lessonType: "", // Пустое значение для вебинаров
+      webinarCategory: "AI Агенты", // Подкатегория для вебинаров
+      contentUrl: "",
+      tags: ""
+    });
+    setEditingLesson(null);
+  };
+
+  const addLesson = async () => {
     if (newLesson.title && newLesson.description) {
-      // Здесь можно добавить логику сохранения урока
-      console.log('Новый урок:', newLesson);
-      setNewLesson({ title: "", description: "", category: "webinars" });
-      setShowForm(false);
-      alert('Урок успешно добавлен!');
+      setIsLoading(true);
+      try {
+        // Здесь будет интеграция с Django backend API
+        const lessonData = {
+          ...newLesson,
+          id: Date.now(), // Временный ID
+          createdAt: new Date().toISOString(),
+          tags: newLesson.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+          // Для вебинаров используем webinarCategory как category в данных урока
+          ...(newLesson.category === "webinars" && { webinarCategory: newLesson.webinarCategory })
+        };
+        
+        if (editingLesson) {
+          // Обновление существующего урока
+          setLessons(lessons.map(lesson => 
+            lesson.id === editingLesson.id ? { ...lessonData, id: editingLesson.id } : lesson
+          ));
+          alert('Урок успешно обновлен!');
+        } else {
+          // Добавление нового урока
+          setLessons([...lessons, lessonData]);
+          alert('Урок успешно добавлен!');
+        }
+        
+        resetForm();
+        setShowForm(false);
+      } catch (error) {
+        console.error('Ошибка при сохранении урока:', error);
+        alert('Произошла ошибка при сохранении урока');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      alert('Пожалуйста, заполните обязательные поля: название и описание');
     }
   };
+
+
+
+
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 pt-4">
@@ -93,19 +161,75 @@ export default function AdminPanel() {
                   placeholder="Введите описание урока"
                 />
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Категория</label>
+                  <select
+                    value={newLesson.category}
+                    onChange={(e) => {
+                      const newCategory = e.target.value;
+                      setNewLesson({
+                        ...newLesson, 
+                        category: newCategory,
+                        lessonType: newCategory === "webinars" ? "" : newLesson.lessonType
+                      });
+                    }}
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-gray-400"
+                  >
+                    <option value="webinars">Вебинары</option>
+                    <option value="ai-agents">AI Агенты</option>
+                    <option value="beginners">Для начинающих</option>
+                    <option value="no-code">No-Code</option>
+                    <option value="graphic-ai">Графический AI</option>
+                  </select>
+                </div>
+                {newLesson.category === "webinars" ? (
+                  <div>
+                    <label className="block text-gray-300 mb-2">Тема вебинара</label>
+                    <select
+                      value={newLesson.webinarCategory}
+                      onChange={(e) => setNewLesson({...newLesson, webinarCategory: e.target.value})}
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-gray-400"
+                    >
+                      <option value="AI Агенты">AI Агенты</option>
+                      <option value="No-Code">No-Code</option>
+                      <option value="Графический ИИ">Графический ИИ</option>
+                    </select>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-gray-300 mb-2">Тип урока</label>
+                    <select
+                      value={newLesson.lessonType}
+                      onChange={(e) => setNewLesson({...newLesson, lessonType: e.target.value})}
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-gray-400"
+                    >
+                      <option value="archive">Архив</option>
+                      <option value="sprint">Спринт</option>
+                      <option value="webinar">Вебинар</option>
+                    </select>
+                  </div>
+                )}
+              </div>
               <div>
-                <label className="block text-gray-300 mb-2">Категория</label>
-                <select
-                  value={newLesson.category}
-                  onChange={(e) => setNewLesson({...newLesson, category: e.target.value})}
-                  className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-gray-400"
-                >
-                  <option value="webinars">Вебинары</option>
-                  <option value="ai-agents">AI Агенты</option>
-                  <option value="beginners">Для начинающих</option>
-                  <option value="no-code">No-Code</option>
-                  <option value="graphic-ai">Графический AI</option>
-                </select>
+                <label className="block text-gray-300 mb-2">Ссылка на контент</label>
+                <input
+                  type="url"
+                  value={newLesson.contentUrl}
+                  onChange={(e) => setNewLesson({...newLesson, contentUrl: e.target.value})}
+                  className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                  placeholder="https://example.com/lesson"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Теги (через запятую)</label>
+                <input
+                  type="text"
+                  value={newLesson.tags}
+                  onChange={(e) => setNewLesson({...newLesson, tags: e.target.value})}
+                  className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                  placeholder="javascript, react, frontend"
+                />
               </div>
               <div className="flex gap-3">
                 <motion.div
@@ -115,9 +239,10 @@ export default function AdminPanel() {
                 >
                   <GlassButton
                     onClick={addLesson}
-                    className="bg-gray-800/50 hover:bg-gray-700/50 border-gray-600/50 text-white"
+                    disabled={isLoading}
+                    className="bg-gray-800/50 hover:bg-gray-700/50 border-gray-600/50 text-white disabled:opacity-50"
                   >
-                    Добавить урок
+                    {isLoading ? 'Сохранение...' : (editingLesson ? 'Обновить урок' : 'Добавить урок')}
                   </GlassButton>
                 </motion.div>
                 <motion.div
@@ -126,7 +251,10 @@ export default function AdminPanel() {
                   transition={{ duration: 0.2 }}
                 >
                   <GlassButton
-                    onClick={() => setShowForm(false)}
+                    onClick={() => {
+                      resetForm();
+                      setShowForm(false);
+                    }}
                     className="bg-gray-800/50 hover:bg-gray-700/50 border-gray-600/50 text-white"
                   >
                     Отменить

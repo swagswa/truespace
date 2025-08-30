@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function NoCodeArchive() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
       title: "Введение в no-code ИИ",
@@ -104,7 +104,7 @@ export default function NoCodeArchive() {
         <AnimatedContainer delay={0.4}>
           <div className="flex flex-col gap-3">
             {lessons.length > 0 ? (
-              lessons.map((lesson, index) => (
+              lessons.map((lesson) => (
                 <LessonCard
                   key={lesson.id}
                   lesson={lesson}

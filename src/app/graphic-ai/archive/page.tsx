@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function GraphicAIArchive() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
       title: "Основы Midjourney",

@@ -1,6 +1,6 @@
 "use client";
 
-import { GlassButton } from "@/components/ui/glass-button";
+
 import { LessonCard } from "@/components/ui/lesson-card";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function SprintSeptember2025() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
       title: "Введение в AI агентов",

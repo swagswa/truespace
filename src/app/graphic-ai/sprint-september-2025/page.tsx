@@ -7,7 +7,7 @@ import { AnimatedContainer } from "@/components/ui/animated-container";
 import { motion } from "framer-motion";
 
 export default function GraphicAISprint() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
       title: "Введение в графический ИИ",

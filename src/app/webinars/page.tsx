@@ -1,17 +1,63 @@
 "use client";
 
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import { LessonCard } from "@/components/ui/lesson-card";
 import { AnimatedContainer } from "@/components/ui/animated-container";
-import Link from "next/link";
-import { useState } from "react";
-import { motion } from "framer-motion";
 
 export default function Webinars() {
-  const [lessons, setLessons] = useState([
+  const [lessons] = useState([
     {
       id: "1",
-      title: "Основы веб-разработки",
-      description: "Введение в HTML, CSS и JavaScript. Изучите основы создания современных веб-сайтов и интерактивных пользовательских интерфейсов.",
+      title: "Создание AI-агента для автоматизации",
+      description: "Изучите основы создания ИИ-агентов для автоматизации бизнес-процессов",
+      category: "AI Агенты",
+      liked: false,
+      completed: false,
+      isExpanded: false,
+    },
+    {
+      id: "2",
+      title: "Интеграция ChatGPT в рабочие процессы",
+      description: "Практические методы внедрения ИИ в повседневную работу",
+      category: "AI Агенты",
+      liked: false,
+      completed: false,
+      isExpanded: false,
+    },
+    {
+      id: "3",
+      title: "Создание приложений без кода",
+      description: "Разработка полноценных приложений с помощью No-Code платформ",
+      category: "No-Code",
+      liked: false,
+      completed: false,
+      isExpanded: false,
+    },
+    {
+      id: "4",
+      title: "Автоматизация с Zapier и Make",
+      description: "Настройка автоматических процессов между различными сервисами",
+      category: "No-Code",
+      liked: false,
+      completed: false,
+      isExpanded: false,
+    },
+    {
+      id: "5",
+      title: "Генерация изображений с Midjourney",
+      description: "Создание профессиональных изображений с помощью ИИ",
+      category: "Графический ИИ",
+      liked: false,
+      completed: false,
+      isExpanded: false,
+    },
+    {
+      id: "6",
+      title: "Дизайн логотипов с помощью ИИ",
+      description: "Создание уникальных логотипов и брендинга с использованием ИИ-инструментов",
+      category: "Графический ИИ",
       liked: false,
       completed: false,
       isExpanded: false,
@@ -107,28 +153,91 @@ export default function Webinars() {
 
         {/* Lessons List */}
         <motion.div 
-          className="flex flex-col gap-3"
+          className="flex flex-col gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
           {lessons.length > 0 ? (
-            lessons.map((lesson, index) => (
-              <AnimatedContainer key={lesson.id} delay={0.8 + index * 0.1} direction="up">
-                <LessonCard
-                  lesson={lesson}
-                  isLiked={likedLessons.has(lesson.id)}
-                  isCompleted={completedLessons.has(lesson.id)}
-                  isExpanded={expandedLessons.has(lesson.id)}
-                  onToggleLike={() => toggleLike(lesson.id)}
-                  onToggleComplete={() => toggleCompleted(lesson.id)}
-                  onToggleExpand={() => toggleExpanded(lesson.id)}
-                />
-
-                  
-
-              </AnimatedContainer>
-            ))
+            (() => {
+              // Группируем уроки по категориям
+              const categories = ['AI Агенты', 'No-Code', 'Графический ИИ'];
+              const categoryIcons: { [key: string]: React.ReactElement } = {
+                'AI Агенты': (
+                  <motion.svg 
+                    className="w-5 h-5 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    viewBox="0 0 24 24"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </motion.svg>
+                ),
+                'No-Code': (
+                  <motion.svg 
+                    className="w-5 h-5 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    viewBox="0 0 24 24"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </motion.svg>
+                ),
+                'Графический ИИ': (
+                  <motion.svg 
+                    className="w-5 h-5 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    viewBox="0 0 24 24"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </motion.svg>
+                )
+              };
+              
+              return categories.map((category, categoryIndex) => {
+                const categoryLessons = lessons.filter(lesson => lesson.category === category);
+                
+                if (categoryLessons.length === 0) return null;
+                
+                return (
+                  <div key={category} className="mb-6">
+                    <AnimatedContainer delay={0.8 + categoryIndex * 0.2} direction="up">
+                      <div className="flex items-center gap-2 mb-4 px-2">
+                        {categoryIcons[category]}
+                        <h2 className="text-lg font-semibold text-white">{category}</h2>
+                        <div className="text-sm text-white/60">({categoryLessons.length})</div>
+                      </div>
+                    </AnimatedContainer>
+                    
+                    <div className="flex flex-col gap-3">
+                      {categoryLessons.map((lesson, lessonIndex) => (
+                        <AnimatedContainer key={lesson.id} delay={1.0 + categoryIndex * 0.2 + lessonIndex * 0.1} direction="up">
+                          <LessonCard
+                            lesson={lesson}
+                            isLiked={likedLessons.has(lesson.id)}
+                            isCompleted={completedLessons.has(lesson.id)}
+                            isExpanded={expandedLessons.has(lesson.id)}
+                            onToggleLike={() => toggleLike(lesson.id)}
+                            onToggleComplete={() => toggleCompleted(lesson.id)}
+                            onToggleExpand={() => toggleExpanded(lesson.id)}
+                          />
+                        </AnimatedContainer>
+                      ))}
+                    </div>
+                  </div>
+                );
+              });
+            })()
           ) : (
             <AnimatedContainer delay={0.8} direction="up">
               <div className="text-center py-12">
