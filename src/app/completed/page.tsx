@@ -62,8 +62,8 @@ export default function Completed() {
         });
 
         setLessonsByCategory(grouped);
-      } catch (err: any) {
-        setError(err.message || "Ошибка загрузки данных");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
       } finally {
         setLoading(false);
       }
@@ -104,9 +104,9 @@ export default function Completed() {
         }
         return updated;
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || "Не удалось изменить статус завершения");
+      setError(err instanceof Error ? err.message : "Не удалось изменить статус завершения");
     }
   }
 
@@ -138,9 +138,9 @@ export default function Completed() {
         }
         return updated;
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || "Не удалось изменить избранное");
+      setError(err instanceof Error ? err.message : "Не удалось изменить избранное");
     }
   }
 
@@ -221,8 +221,6 @@ export default function Completed() {
                           id: lesson.id.toString(),
                           title: lesson.lessonName,
                           description: lesson.lessonDescription,
-                          liked: lesson.liked,
-                          completed: true,
                           isExpanded: false,
                         }}
                         isLiked={lesson.liked}

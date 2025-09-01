@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -16,7 +16,7 @@ type Topic = {
   slug: string;
 };
 
-export default function Page() {
+function PageContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
@@ -57,8 +57,8 @@ export default function Page() {
 
         const data = await res.json();
         setTopics(data);
-      } catch (err: any) {
-        setError(err.message || "Ошибка загрузки тем");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Ошибка загрузки тем");
       } finally {
         setLoading(false);
       }
@@ -172,6 +172,14 @@ export default function Page() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center"><div className="text-white text-xl">Loading...</div></div>}>
+      <PageContent />
+    </Suspense>
   );
 }
 

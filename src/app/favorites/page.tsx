@@ -62,8 +62,8 @@ export default function Favorites() {
         });
 
         setLessonsByCategory(grouped);
-      } catch (err: any) {
-        setError(err.message || "Ошибка загрузки данных");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
       } finally {
         setLoading(false);
       }
@@ -97,9 +97,9 @@ export default function Favorites() {
         }
         return updated;
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || "Не удалось изменить избранное");
+      setError(err instanceof Error ? err.message : "Не удалось изменить избранное");
     }
   }
 
@@ -132,9 +132,9 @@ export default function Favorites() {
         }
         return updated;
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || "Не удалось изменить статус завершения");
+      setError(err instanceof Error ? err.message : "Не удалось изменить статус завершения");
     }
   }
 
@@ -215,8 +215,6 @@ export default function Favorites() {
                           id: lesson.id.toString(),
                           title: lesson.lessonName,
                           description: lesson.lessonDescription,
-                          liked: true,
-                          completed: lesson.completed, // <-- now true when applicable
                           isExpanded: false,
                         }}
                         isLiked={true}

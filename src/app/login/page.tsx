@@ -1,9 +1,9 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
-function postRedirect(url: string, data: Record<string, any>) {
+function postRedirect(url: string, data: Record<string, string>) {
   const form = document.createElement('form');
   form.method = 'POST';
   form.action = url;
@@ -20,7 +20,7 @@ function postRedirect(url: string, data: Record<string, any>) {
   form.submit();
 }
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("id");
 
@@ -40,6 +40,14 @@ export default function LoginPage() {
     <div>
       <h1>Logging in...</h1>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div><h1>Loading...</h1></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
 

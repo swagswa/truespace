@@ -70,8 +70,8 @@ export default function SubtopicPage() {
 
         setSmallTopicName(subtopicData.smallTopicName || slug);
         setLessons(lessonsWithStatus);
-      } catch (err: any) {
-        setError(err.message || "Ошибка загрузки данных");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
       } finally {
         setLoading(false);
       }
@@ -195,7 +195,7 @@ export default function SubtopicPage() {
             </AnimatedContainer>
             <AnimatedContainer delay={0.5} direction="up">
               <p className="text-white/80 text-sm mb-6">
-                Уроки по теме "{smallTopicName}"
+                Уроки по теме &quot;{smallTopicName}&quot;
               </p>
             </AnimatedContainer>
           </div>
@@ -220,8 +220,6 @@ export default function SubtopicPage() {
                     id: lesson.id.toString(),
                     title: lesson.lessonName,
                     description: lesson.lessonDescription,
-                    liked: lesson.liked,
-                    completed: lesson.completed,
                     isExpanded: expandedLessons.includes(lesson.id),
                   }}
                   isLiked={lesson.liked}
