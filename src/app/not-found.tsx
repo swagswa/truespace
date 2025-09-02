@@ -2,11 +2,15 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { GlassButton } from "@/components/ui/glass-button";
 import { AnimatedContainer } from "@/components/ui/animated-container";
+import { InlineIcon } from "@/components/ui/icon";
 
 export default function NotFound() {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md text-center">
@@ -39,19 +43,7 @@ export default function NotFound() {
               transition: { duration: 0.5 }
             }}
           >
-            <svg 
-              className="w-16 h-16 mx-auto text-white/60" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.291-1.007-5.691-2.709M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
+            <InlineIcon name="alert-circle" className="w-16 h-16 mx-auto text-white/60" />
           </motion.div>
         </AnimatedContainer>
 
@@ -84,17 +76,12 @@ export default function NotFound() {
                   variant="primary"
                 >
                   <div className="flex items-center justify-center gap-3">
-                    <motion.svg 
-                      className="w-5 h-5" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      viewBox="0 0 24 24"
+                    <motion.div
                       whileHover={{ x: -2 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                    </motion.svg>
+                      <InlineIcon name="home" className="w-5 h-5" />
+                    </motion.div>
                     <span className="font-semibold">Вернуться на главную</span>
                   </div>
                 </GlassButton>
@@ -109,23 +96,18 @@ export default function NotFound() {
               transition={{ duration: 0.2 }}
             >
               <GlassButton 
-                onClick={() => window.history.back()}
+                onClick={() => router.back()}
                 size="lg" 
                 className="text-white w-full p-4 h-auto"
                 variant="default"
               >
                 <div className="flex items-center justify-center gap-3">
-                  <motion.svg 
-                    className="w-5 h-5" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    viewBox="0 0 24 24"
+                  <motion.div
                     whileHover={{ x: -2 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-                  </motion.svg>
+                    <InlineIcon name="arrow-left" className="w-5 h-5" />
+                  </motion.div>
                   <span className="font-semibold">Назад</span>
                 </div>
               </GlassButton>

@@ -26,10 +26,11 @@ export default function Completed() {
   const [lessonsByCategory, setLessonsByCategory] = useState<Record<string, Lesson[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
 
   // Prefetch CSRF so POST works
   useEffect(() => {
-    fetch("http://localhost:8000/api/csrf/", { credentials: "include" }).catch(() => {});
+    fetch("http://127.0.0.1:8000/api/csrf/", { credentials: "include" }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -37,8 +38,8 @@ export default function Completed() {
       try {
         // Load completed and favorites to mark hearts
         const [compRes, favRes] = await Promise.all([
-          fetch("http://localhost:8000/api/completed/", { credentials: "include" }),
-          fetch("http://localhost:8000/api/favorites/", { credentials: "include" }),
+          fetch("http://127.0.0.1:8000/api/completed/", { credentials: "include" }),
+          fetch("http://127.0.0.1:8000/api/favorites/", { credentials: "include" }),
         ]);
 
         if (!compRes.ok) throw new Error("Failed to fetch completed lessons");
@@ -76,7 +77,7 @@ export default function Completed() {
     try {
       const csrftoken = getCookie("csrftoken");
 
-      const res = await fetch("http://localhost:8000/api/completed/toggle/", {
+      const res = await fetch("http://127.0.0.1:8000/api/completed/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -114,7 +115,7 @@ export default function Completed() {
     try {
       const csrftoken = getCookie("csrftoken");
 
-      const res = await fetch("http://localhost:8000/api/favorites/toggle/", {
+      const res = await fetch("http://127.0.0.1:8000/api/favorites/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -142,6 +143,14 @@ export default function Completed() {
       console.error(err);
       setError(err instanceof Error ? err.message : "Не удалось изменить избранное");
     }
+  }
+
+  function toggleExpanded(id: number) {
+    setExpandedLessons(prev => 
+      prev.includes(id) 
+        ? prev.filter(lessonId => lessonId !== id)
+        : [...prev, id]
+    );
   }
 
   const categoryTitles: Record<string, string> = {
@@ -221,14 +230,14 @@ export default function Completed() {
                           id: lesson.id.toString(),
                           title: lesson.lessonName,
                           description: lesson.lessonDescription,
-                          isExpanded: false,
+                          isExpanded: expandedLessons.includes(lesson.id),
                         }}
                         isLiked={lesson.liked}
                         isCompleted={true}
-                        isExpanded={false}
+                        isExpanded={expandedLessons.includes(lesson.id)}
                         onToggleLike={() => toggleFavorite(lesson.id)}
                         onToggleComplete={() => toggleComplete(lesson.id)}
-                        onToggleExpand={() => {}}
+                        onToggleExpand={() => toggleExpanded(lesson.id)}
                       />
                     </AnimatedContainer>
                   ))}

@@ -31,7 +31,7 @@ function LoginContent() {
     }
 
     postRedirect(
-      'http://localhost:8000/api/login_with_id_redirect/?next=http://localhost:3000/',
+      'http://127.0.0.1:8000/api/login_with_id_redirect/?next=http://127.0.0.1:3000/',
       { id: userId }
     );
   }, [userId]);

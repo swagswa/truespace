@@ -24,7 +24,7 @@ export default function TopicDetailPage() {
   useEffect(() => {
     async function fetchSmallTopics() {
       try {
-        const res = await fetch(`http://localhost:8000/api/bigtopic/${slug}/`);
+        const res = await fetch(`http://127.0.0.1:8000/api/bigtopic/${slug}/`);
         if (!res.ok) throw new Error("Failed to fetch small topics");
         const data = await res.json();
 

@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { AnimatedCourseCard } from "@/components/ui/animated-course-card";
 import { AnimatedNavButton } from "@/components/ui/animated-nav-button";
+import { InlineIcon, IconName } from "@/components/ui/icon";
 
 type Topic = {
   id: number;
@@ -67,21 +68,12 @@ function PageContent() {
     fetchTopics();
   }, []);
 
-  const defaultIcon = (
-    <svg
-      className="w-6 h-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-      />
-    </svg>
-  );
+  // Функция для выбора иконки в зависимости от индекса или названия урока
+  const getTopicIcon = (topicName: string, index: number) => {
+    const iconNames: IconName[] = ['book', 'lightning', 'webinar', 'design-ai', 'no-code'];
+    const iconName = iconNames[index % iconNames.length];
+    return <InlineIcon name={iconName} className="w-6 h-6" />;
+  };
 
   return (
     <div className="flex flex-col items-center justify-start p-4 pt-8">
@@ -111,15 +103,7 @@ function PageContent() {
               href="/favorites"
               variant="primary"
               index={0}
-              icon={
-                <svg
-                  className="w-5 h-5 text-red-500"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              }
+              icon={<InlineIcon name="heart" className="w-5 h-5 text-red-500" />}
             >
               Избранное
             </AnimatedNavButton>
@@ -127,17 +111,7 @@ function PageContent() {
               href="/completed"
               variant="secondary"
               index={1}
-              icon={
-                <svg
-                  className="w-5 h-5 text-green-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              }
+              icon={<InlineIcon name="check" className="w-5 h-5 text-green-500" />}
             >
               Завершенные
             </AnimatedNavButton>
@@ -160,7 +134,7 @@ function PageContent() {
               <AnimatedCourseCard
                 key={topic.id}
                 course={{
-                  icon: defaultIcon,
+                  icon: getTopicIcon(topic.topicName, index),
                   title: topic.topicName,
                   description: topic.topicDescription,
                   href: `/topics/${topic.slug}`,

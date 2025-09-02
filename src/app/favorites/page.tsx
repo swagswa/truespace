@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { motion } from "framer-motion";
+import { InlineIcon } from "@/components/ui/icon";
 
 // Helper to read cookies (for CSRF token)
 function getCookie(name: string): string | null {
@@ -26,10 +27,11 @@ export default function Favorites() {
   const [lessonsByCategory, setLessonsByCategory] = useState<Record<string, Lesson[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
 
   // Prefetch CSRF cookie so POSTs work
   useEffect(() => {
-    fetch("http://localhost:8000/api/csrf/", { credentials: "include" }).catch(() => {});
+    fetch("http://127.0.0.1:8000/api/csrf/", { credentials: "include" }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -37,8 +39,8 @@ export default function Favorites() {
       try {
         // Load favorites and completed in parallel
         const [favRes, compRes] = await Promise.all([
-          fetch("http://localhost:8000/api/favorites/", { credentials: "include" }),
-          fetch("http://localhost:8000/api/completed/", { credentials: "include" }),
+          fetch("http://127.0.0.1:8000/api/favorites/", { credentials: "include" }),
+        fetch("http://127.0.0.1:8000/api/completed/", { credentials: "include" }),
         ]);
 
         if (!favRes.ok) throw new Error("Failed to fetch favorite lessons");
@@ -72,11 +74,19 @@ export default function Favorites() {
     fetchData();
   }, []);
 
+  function toggleExpanded(id: number) {
+    setExpandedLessons(prev => 
+      prev.includes(id) 
+        ? prev.filter(lessonId => lessonId !== id)
+        : [...prev, id]
+    );
+  }
+
   async function toggleFavorite(id: number) {
     try {
       const csrftoken = getCookie("csrftoken");
 
-      const res = await fetch("http://localhost:8000/api/favorites/toggle/", {
+      const res = await fetch("http://127.0.0.1:8000/api/favorites/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -108,7 +118,7 @@ export default function Favorites() {
     try {
       const csrftoken = getCookie("csrftoken");
 
-      const res = await fetch("http://localhost:8000/api/completed/toggle/", {
+      const res = await fetch("http://127.0.0.1:8000/api/completed/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -163,30 +173,24 @@ export default function Favorites() {
         <AnimatedContainer delay={0.1}>
           <div className="mb-6">
             <Link href="/" className="inline-block mb-4">
-              <motion.svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
+              <motion.div
+                className="text-white"
                 whileHover={{ x: -2 }}
                 transition={{ duration: 0.2 }}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </motion.svg>
+                <InlineIcon name="arrow-left" className="w-6 h-6" />
+              </motion.div>
             </Link>
             <div className="text-center">
               <AnimatedContainer delay={0.2}>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <motion.svg
-                    className="w-6 h-6 text-red-500"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
+                  <motion.div
+                    className="text-red-500"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </motion.svg>
+                    <InlineIcon name="heart" className="w-6 h-6" />
+                  </motion.div>
                   <h1 className="text-2xl font-bold text-white">Избранные уроки</h1>
                 </div>
               </AnimatedContainer>
@@ -215,14 +219,14 @@ export default function Favorites() {
                           id: lesson.id.toString(),
                           title: lesson.lessonName,
                           description: lesson.lessonDescription,
-                          isExpanded: false,
+                          isExpanded: expandedLessons.includes(lesson.id),
                         }}
                         isLiked={true}
                         isCompleted={lesson.completed}
-                        isExpanded={false}
+                        isExpanded={expandedLessons.includes(lesson.id)}
                         onToggleLike={() => toggleFavorite(lesson.id)}
-                        onToggleComplete={() => toggleComplete(lesson.id)} // <-- wired up
-                        onToggleExpand={() => {}}
+                        onToggleComplete={() => toggleComplete(lesson.id)}
+                        onToggleExpand={() => toggleExpanded(lesson.id)}
                       />
                     </AnimatedContainer>
                   ))}

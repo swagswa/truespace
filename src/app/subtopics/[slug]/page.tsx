@@ -1,9 +1,8 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { LessonCard } from "@/components/ui/lesson-card";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
@@ -26,6 +25,7 @@ type Lesson = {
 
 export default function SubtopicPage() {
   const { slug } = useParams();
+  const router = useRouter();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [smallTopicName, setSmallTopicName] = useState("");
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function SubtopicPage() {
 
   // 🔐 Prefetch CSRF token on mount
   useEffect(() => {
-    fetch("http://localhost:8000/api/csrf/", {
+    fetch("http://127.0.0.1:8000/api/csrf/", {
       credentials: "include",
     }).catch(() => {});
   }, []);
@@ -46,9 +46,9 @@ export default function SubtopicPage() {
         setLoading(true);
 
         const [subtopicRes, favoritesRes, completedRes] = await Promise.all([
-          fetch(`http://localhost:8000/api/smalltopic/${slug}/`, { credentials: "include" }),
-          fetch("http://localhost:8000/api/favorites/", { credentials: "include" }),
-          fetch("http://localhost:8000/api/completed/", { credentials: "include" }),
+          fetch(`http://127.0.0.1:8000/api/smalltopic/${slug}/`, { credentials: "include" }),
+        fetch("http://127.0.0.1:8000/api/favorites/", { credentials: "include" }),
+        fetch("http://127.0.0.1:8000/api/completed/", { credentials: "include" }),
         ]);
 
         if (!subtopicRes.ok) throw new Error("Failed to fetch lessons");
@@ -85,7 +85,7 @@ export default function SubtopicPage() {
     const csrftoken = getCookie("csrftoken");
 
     try {
-      const res = await fetch(`http://localhost:8000/api/favorites/toggle/`, {
+      const res = await fetch(`http://127.0.0.1:8000/api/favorites/toggle/`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -114,7 +114,7 @@ export default function SubtopicPage() {
     const csrftoken = getCookie("csrftoken");
 
     try {
-      const res = await fetch(`http://localhost:8000/api/completed/toggle/`, {
+      const res = await fetch(`http://127.0.0.1:8000/api/completed/toggle/`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -150,7 +150,7 @@ export default function SubtopicPage() {
         {/* Header */}
         <div className="mb-4">
           <AnimatedContainer delay={0.1} direction="left">
-            <Link href="/topics" className="inline-block mb-6 mt-4">
+            <button onClick={() => router.back()} className="inline-block mb-6 mt-4">
               <motion.svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -167,7 +167,7 @@ export default function SubtopicPage() {
                   d="M15 19l-7-7 7-7"
                 />
               </motion.svg>
-            </Link>
+            </button>
           </AnimatedContainer>
 
           <div className="text-center">
