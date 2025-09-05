@@ -97,11 +97,11 @@ export default function SubtopicPage() {
 
       if (!res.ok) throw new Error("Failed to toggle favorite");
 
-      const data: { liked: boolean } = await res.json();
+      const data: { favorited: boolean } = await res.json();
 
       setLessons((prev) =>
         prev.map((lesson) =>
-          lesson.id === lessonId ? { ...lesson, liked: data.liked } : lesson
+          lesson.id === lessonId ? { ...lesson, liked: data.favorited } : lesson
         )
       );
     } catch (err) {

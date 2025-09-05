@@ -127,14 +127,14 @@ export default function Completed() {
 
       if (!res.ok) throw new Error("Failed to toggle favorite");
 
-      const data: { liked: boolean } = await res.json();
+      const data: { favorited: boolean } = await res.json();
 
       // Update the heart icon state in place
       setLessonsByCategory((prev) => {
         const updated = { ...prev };
         for (const key in updated) {
           updated[key] = updated[key].map((lesson) =>
-            lesson.id === id ? { ...lesson, liked: data.liked } : lesson
+            lesson.id === id ? { ...lesson, liked: data.favorited } : lesson
           );
         }
         return updated;
