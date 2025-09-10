@@ -7,7 +7,6 @@ import { AnimatedContainer } from "@/components/ui/animated-container";
 import { motion } from "framer-motion";
 import { InlineIcon } from "@/components/ui/icon";
 
-// Helper to read cookies (for CSRF token)
 function getCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
   return match ? decodeURIComponent(match[2]) : null;
@@ -20,7 +19,8 @@ type Lesson = {
   lessonLink: string;
   slug: string;
   liked: boolean;
-  completed: boolean; // <-- important
+  completed: boolean;
+  belongsTo: string;
 };
 
 export default function Favorites() {
@@ -28,19 +28,27 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
+  const [topicParam, setTopicParam] = useState<string | null>(null);
 
-  // Prefetch CSRF cookie so POSTs work
+  // Get topic query param from URL (client-side)
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/csrf/", { credentials: "include" }).catch(() => {});
+    const params = new URLSearchParams(window.location.search);
+    setTopicParam(params.get("topic"));
+  }, []);
+
+  // Prefetch CSRF token
+  useEffect(() => {
+    fetch("https://sawfdawfawfasf.fun/api/csrf/", { credentials: "include" }).catch(() => {});
   }, []);
 
   useEffect(() => {
+    if (topicParam === null) return; // wait until topicParam is set
+
     async function fetchData() {
       try {
-        // Load favorites and completed in parallel
         const [favRes, compRes] = await Promise.all([
-          fetch("http://127.0.0.1:8000/api/favorites/", { credentials: "include" }),
-        fetch("http://127.0.0.1:8000/api/completed/", { credentials: "include" }),
+          fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
+          fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
         ]);
 
         if (!favRes.ok) throw new Error("Failed to fetch favorite lessons");
@@ -48,12 +56,16 @@ export default function Favorites() {
 
         const favorites: Omit<Lesson, "completed">[] = await favRes.json();
         const completedLessons: { id: number }[] = await compRes.json();
-
         const completedIds = new Set<number>(completedLessons.map((l) => l.id));
 
-        // Group favorites and mark completed by ID
+        // Filter favorites by topic
+        const filteredFavorites = topicParam
+          ? favorites.filter((lesson) => lesson.belongsTo === topicParam)
+          : favorites;
+
+        // Group by category
         const grouped: Record<string, Lesson[]> = {};
-        favorites.forEach((lesson) => {
+        filteredFavorites.forEach((lesson) => {
           const categoryKey = lesson.slug?.split("-")[0] || "other";
           grouped[categoryKey] ||= [];
           grouped[categoryKey].push({
@@ -72,21 +84,18 @@ export default function Favorites() {
     }
 
     fetchData();
-  }, []);
+  }, [topicParam]);
 
   function toggleExpanded(id: number) {
-    setExpandedLessons(prev => 
-      prev.includes(id) 
-        ? prev.filter(lessonId => lessonId !== id)
-        : [...prev, id]
+    setExpandedLessons((prev) =>
+      prev.includes(id) ? prev.filter((lessonId) => lessonId !== id) : [...prev, id]
     );
   }
 
   async function toggleFavorite(id: number) {
     try {
       const csrftoken = getCookie("csrftoken");
-
-      const res = await fetch("http://127.0.0.1:8000/api/favorites/toggle/", {
+      const res = await fetch("https://sawfdawfawfasf.fun/api/favorites/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -98,7 +107,6 @@ export default function Favorites() {
 
       if (!res.ok) throw new Error("Failed to toggle favorite");
 
-      // Remove the lesson from UI immediately
       setLessonsByCategory((prev) => {
         const updated = { ...prev };
         for (const key in updated) {
@@ -113,12 +121,10 @@ export default function Favorites() {
     }
   }
 
-  // NEW: Toggle completion for a favorite (keeps it in the list, just flips the check)
   async function toggleComplete(id: number) {
     try {
       const csrftoken = getCookie("csrftoken");
-
-      const res = await fetch("http://127.0.0.1:8000/api/completed/toggle/", {
+      const res = await fetch("https://sawfdawfawfasf.fun/api/completed/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -131,8 +137,6 @@ export default function Favorites() {
       if (!res.ok) throw new Error("Failed to toggle completion");
 
       const data: { completed: boolean } = await res.json();
-
-      // Update just the completed flag in place
       setLessonsByCategory((prev) => {
         const updated = { ...prev };
         for (const key in updated) {
@@ -157,15 +161,14 @@ export default function Favorites() {
     other: "Другие",
   };
 
-  if (loading) {
-    return <p className="text-white text-center">Загрузка избранных уроков...</p>;
-  }
+  if (loading) return <p className="text-white text-center">Загрузка избранных уроков...</p>;
+  if (error) return <p className="text-red-500 text-center">Ошибка: {error}</p>;
 
-  if (error) {
-    return <p className="text-red-500 text-center">Ошибка: {error}</p>;
-  }
+  const filteredCategories = Object.entries(lessonsByCategory).filter(
+    ([_, lessons]) => lessons.length > 0
+  );
 
-  const allLessons = Object.values(lessonsByCategory).flat();
+  const allLessons = filteredCategories.flatMap(([_, lessons]) => lessons);
 
   return (
     <div className="flex flex-col items-center justify-start p-4 pt-8">
@@ -203,7 +206,7 @@ export default function Favorites() {
 
         <AnimatedContainer delay={0.4}>
           {allLessons.length > 0 ? (
-            Object.entries(lessonsByCategory).map(([key, lessons], idx) => (
+            filteredCategories.map(([key, lessons], idx) => (
               <div key={key} className="mb-6">
                 <AnimatedContainer delay={0.5 + idx * 0.1}>
                   <h2 className="text-white text-lg font-semibold mb-2">
@@ -250,7 +253,7 @@ export default function Favorites() {
                   d="M4.318 6.318a4.5 4.5 0 006.364 0L12 3.636l1.318 1.318a4.5 4.5 0 006.364-6.364L12 14l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </motion.svg>
-              <p className="text-white/60 text-sm">У вас пока нет избранных уроков</p>
+              <p className="text-white/60 text-sm">У вас пока нет избранных уроков для этой темы</p>
               <Link href="/">
                 <motion.div
                   whileHover={{ scale: 1.05 }}

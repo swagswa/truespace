@@ -28,7 +28,7 @@ function PageContent() {
   // ✅ Login with ID if provided
   useEffect(() => {
     if (id) {
-      fetch("http://127.0.0.1:8000/api/login/", {
+      fetch("https://sawfdawfawfasf.fun/api/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function PageContent() {
   useEffect(() => {
     async function fetchTopics() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/bigtopics/");
+        const res = await fetch("https://sawfdawfawfasf.fun/api/bigtopics/");
         if (!res.ok) throw new Error("Failed to fetch topics");
 
         const data = await res.json();
@@ -97,25 +97,6 @@ function PageContent() {
             <p className="text-white/80 text-sm mb-4">Образовательная платформа</p>
           </AnimatedContainer>
 
-          {/* Navigation buttons */}
-          <div className="flex gap-2 mb-6">
-            <AnimatedNavButton
-              href="/favorites"
-              variant="primary"
-              index={0}
-              icon={<InlineIcon name="heart" className="w-5 h-5 text-red-500" />}
-            >
-              Избранное
-            </AnimatedNavButton>
-            <AnimatedNavButton
-              href="/completed"
-              variant="secondary"
-              index={1}
-              icon={<InlineIcon name="check" className="w-5 h-5 text-green-500" />}
-            >
-              Завершенные
-            </AnimatedNavButton>
-          </div>
         </div>
 
         {/* Loading / Error */}

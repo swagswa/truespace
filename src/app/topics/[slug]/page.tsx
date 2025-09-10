@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { GlassButton } from "@/components/ui/glass-button";
 import { AnimatedContainer } from "@/components/ui/animated-container";
+import { AnimatedNavButton } from "@/components/ui/animated-nav-button";
+import { InlineIcon } from "@/components/ui/icon";
 
 type SmallTopic = {
   id: number;
@@ -24,7 +26,7 @@ export default function TopicDetailPage() {
   useEffect(() => {
     async function fetchSmallTopics() {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/bigtopic/${slug}/`);
+        const res = await fetch(`https://sawfdawfawfasf.fun/api/bigtopic/${slug}/`);
         if (!res.ok) throw new Error("Failed to fetch small topics");
         const data = await res.json();
 
@@ -64,6 +66,7 @@ export default function TopicDetailPage() {
               </motion.svg>
             </Link>
           </AnimatedContainer>
+
           <div className="text-center">
             <AnimatedContainer delay={0.2} direction="up">
               <h1 className="text-3xl font-bold text-white mb-4">
@@ -74,6 +77,28 @@ export default function TopicDetailPage() {
               <p className="text-white/80 text-sm mb-8">
                 Выберите подраздел для изучения
               </p>
+            </AnimatedContainer>
+
+            {/* Navigation buttons */}
+            <AnimatedContainer delay={0.4} direction="up">
+              <div className="flex gap-2 justify-center mb-6">
+                <AnimatedNavButton
+                  href={`/favorites?topic=${slug}`}
+                  variant="primary"
+                  index={0}
+                  icon={<InlineIcon name="heart" className="w-5 h-5 text-red-500" />}
+                >
+                  Избранное
+                </AnimatedNavButton>
+                <AnimatedNavButton
+                  href={`/completed?topic=${slug}`}
+                  variant="secondary"
+                  index={1}
+                  icon={<InlineIcon name="check" className="w-5 h-5 text-green-500" />}
+                >
+                  Завершенные
+                </AnimatedNavButton>
+              </div>
             </AnimatedContainer>
           </div>
         </div>
