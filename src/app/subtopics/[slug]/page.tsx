@@ -220,6 +220,7 @@ export default function SubtopicPage() {
                     id: lesson.id.toString(),
                     title: lesson.lessonName,
                     description: lesson.lessonDescription,
+                    lessonLink: lesson.lessonLink,
                     isExpanded: expandedLessons.includes(lesson.id),
                   }}
                   isLiked={lesson.liked}

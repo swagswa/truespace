@@ -7,6 +7,7 @@ interface Lesson {
   id: string;
   title: string;
   description: string;
+  lessonLink?: string;
   isExpanded?: boolean;
 }
 
@@ -131,7 +132,9 @@ export function LessonCard({
                 className="w-full py-2 px-3 rounded-lg bg-white text-black transition-colors duration-200 cursor-pointer border border-white/20"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Здесь можно добавить логику для просмотра урока
+                  if (lesson.lessonLink) {
+                    window.open(lesson.lessonLink, '_blank');
+                  }
                 }}
               >
                 <div className="flex items-center justify-center gap-2 text-black text-sm font-medium">
