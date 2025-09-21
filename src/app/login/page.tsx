@@ -31,7 +31,7 @@ function LoginContent() {
     }
 
     postRedirect(
-      'https://sawfdawfawfasf.fun/api/login_with_id_redirect/?next=http://127.0.0.1:3000/',
+      'https://sawfdawfawfasf.fun/api/login_with_id_redirect/?next=https://sawfdawfawfasf.fun/',
       { id: userId }
     );
   }, [userId]);

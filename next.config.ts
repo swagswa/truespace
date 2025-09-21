@@ -5,7 +5,7 @@ const nextConfig = {
   
   // Allow cross-origin requests for development
   allowedDevOrigins: [
-    '127.0.0.1',
+    'sawfdawfawfasf.fun',
     'localhost',
     '127.0.0.1',
   ],
@@ -27,7 +27,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'ALLOWALL',
           },
           {
             key: 'X-Content-Type-Options',
