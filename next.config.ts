@@ -39,7 +39,7 @@ const nextConfig = {
           },
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*', // Для продакшена лучше указать конкретный домен
+            value: 'https://sawfdawfawfasf.fun',
           },
           {
             key: 'Access-Control-Allow-Methods',
