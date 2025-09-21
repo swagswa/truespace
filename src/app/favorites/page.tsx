@@ -48,16 +48,16 @@ export default function Favorites() {
 
     async function fetchData() {
       try {
-        const [favRes, compRes] = await Promise.all([
+        const [favoritesRes, completedRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
-      fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
+          fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
         ]);
 
-        if (!favRes.ok) throw new Error("Failed to fetch favorite lessons");
-        if (!compRes.ok) throw new Error("Failed to fetch completed lessons");
+        if (!favoritesRes.ok) throw new Error("Failed to fetch favorite lessons");
+        if (!completedRes.ok) throw new Error("Failed to fetch completed lessons");
 
-        const favorites: Omit<Lesson, "completed">[] = await favRes.json();
-        const completedLessons: { id: number }[] = await compRes.json();
+        const favorites: Omit<Lesson, "completed">[] = await favoritesRes.json();
+        const completedLessons: { id: number }[] = await completedRes.json();
         const completedIds = new Set<number>(completedLessons.map((l) => l.id));
 
         // Filter favorites by topic

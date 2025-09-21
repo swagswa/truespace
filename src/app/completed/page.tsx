@@ -48,7 +48,7 @@ export default function Completed() {
       try {
         const [completedRes, favoritesRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
-      fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
+          fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
         ]);
 
         if (!completedRes.ok) throw new Error("Failed to fetch completed lessons");
