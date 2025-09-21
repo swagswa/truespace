@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 // Helper to read cookies (for CSRF token)
 function getCookie(name: string): string | null {
@@ -24,6 +25,7 @@ type Lesson = {
 };
 
 export default function Completed() {
+  const router = useRouter();
   const [lessonsByTopic, setLessonsByTopic] = useState<Record<string, Lesson[]>>({});
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ export default function Completed() {
       try {
         const [completedRes, favoritesRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
-          fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
+      fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
         ]);
 
         if (!completedRes.ok) throw new Error("Failed to fetch completed lessons");
@@ -171,7 +173,7 @@ export default function Completed() {
       <div className="w-full max-w-sm">
         <AnimatedContainer delay={0.1}>
           <div className="mb-6">
-            <Link href="/" className="inline-block mb-4">
+            <button onClick={() => router.back()} className="inline-block mb-4">
               <motion.svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -183,7 +185,7 @@ export default function Completed() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </motion.svg>
-            </Link>
+            </button>
 
             <div className="text-center">
               <AnimatedContainer delay={0.2}>
@@ -232,6 +234,7 @@ export default function Completed() {
                           lessonLink: lesson.lessonLink,
                           isExpanded: expandedLessons.includes(lesson.id),
                         }}
+                        lessonNumber={i + 1}
                         isLiked={lesson.liked}
                         isCompleted={true}
                         isExpanded={expandedLessons.includes(lesson.id)}

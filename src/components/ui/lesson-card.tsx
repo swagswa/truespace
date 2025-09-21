@@ -16,6 +16,7 @@ interface LessonCardProps {
   isLiked: boolean;
   isCompleted: boolean;
   isExpanded: boolean;
+  lessonNumber?: number;
   onToggleLike: () => void;
   onToggleComplete: () => void;
   onToggleExpand: () => void;
@@ -26,6 +27,7 @@ export function LessonCard({
   isLiked,
   isCompleted,
   isExpanded,
+  lessonNumber,
   onToggleLike,
   onToggleComplete,
   onToggleExpand
@@ -34,14 +36,15 @@ export function LessonCard({
     <motion.div>
       <GlassButton 
         size="md" 
-        className="text-white w-full text-left p-4 h-auto mb-3"
+        className="text-white w-full text-left p-4 h-auto mb-1"
         variant="default"
+        onClick={onToggleExpand}
       >
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2 flex-1">
             <div className="flex items-center gap-3">
               <span className="text-white/60 font-medium">
-                #{lesson.id}
+                #{lessonNumber || lesson.id}
               </span>
               <h3 className="text-white font-semibold">
                 {lesson.title}

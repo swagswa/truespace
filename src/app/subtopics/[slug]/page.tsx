@@ -47,8 +47,8 @@ export default function SubtopicPage() {
 
         const [subtopicRes, favoritesRes, completedRes] = await Promise.all([
           fetch(`https://sawfdawfawfasf.fun/api/smalltopic/${slug}/`, { credentials: "include" }),
-        fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
-        fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
+      fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
+      fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
         ]);
 
         if (!subtopicRes.ok) throw new Error("Failed to fetch lessons");
@@ -223,6 +223,7 @@ export default function SubtopicPage() {
                     lessonLink: lesson.lessonLink,
                     isExpanded: expandedLessons.includes(lesson.id),
                   }}
+                  lessonNumber={index + 1}
                   isLiked={lesson.liked}
                   isCompleted={lesson.completed}
                   isExpanded={expandedLessons.includes(lesson.id)}

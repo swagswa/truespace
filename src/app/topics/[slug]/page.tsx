@@ -26,9 +26,9 @@ export default function TopicDetailPage() {
   useEffect(() => {
     async function fetchSmallTopics() {
       try {
-        const res = await fetch(`https://sawfdawfawfasf.fun/api/bigtopic/${slug}/`);
-        if (!res.ok) throw new Error("Failed to fetch small topics");
-        const data = await res.json();
+        const response = await fetch(`https://sawfdawfawfasf.fun/api/bigtopic/${slug}/`);
+        if (!response.ok) throw new Error("Failed to fetch small topics");
+        const data = await response.json();
 
         setBigTopicName(data.bigTopicName);
         setSmallTopics(data.smallTopics);

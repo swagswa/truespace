@@ -28,7 +28,7 @@ function PageContent() {
   // ✅ Login with ID if provided
   useEffect(() => {
     if (id) {
-      fetch("https://sawfdawfawfasf.fun/api/login/", {
+      fetch("https://sawfdawfawfasf.fun/api/login_with_id_redirect/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { motion } from "framer-motion";
 import { InlineIcon } from "@/components/ui/icon";
+import { useRouter } from "next/navigation";
 
 function getCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
@@ -24,6 +25,7 @@ type Lesson = {
 };
 
 export default function Favorites() {
+  const router = useRouter();
   const [lessonsByCategory, setLessonsByCategory] = useState<Record<string, Lesson[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,7 @@ export default function Favorites() {
       try {
         const [favRes, compRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
-          fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
+      fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
         ]);
 
         if (!favRes.ok) throw new Error("Failed to fetch favorite lessons");
@@ -175,7 +177,7 @@ export default function Favorites() {
       <div className="w-full max-w-sm">
         <AnimatedContainer delay={0.1}>
           <div className="mb-6">
-            <Link href="/" className="inline-block mb-4">
+            <button onClick={() => router.back()} className="inline-block mb-4">
               <motion.div
                 className="text-white"
                 whileHover={{ x: -2 }}
@@ -183,7 +185,7 @@ export default function Favorites() {
               >
                 <InlineIcon name="arrow-left" className="w-6 h-6" />
               </motion.div>
-            </Link>
+            </button>
             <div className="text-center">
               <AnimatedContainer delay={0.2}>
                 <div className="flex items-center justify-center gap-2 mb-4">
@@ -224,6 +226,7 @@ export default function Favorites() {
                           description: lesson.lessonDescription,
                           isExpanded: expandedLessons.includes(lesson.id),
                         }}
+                        lessonNumber={i + 1}
                         isLiked={true}
                         isCompleted={lesson.completed}
                         isExpanded={expandedLessons.includes(lesson.id)}
