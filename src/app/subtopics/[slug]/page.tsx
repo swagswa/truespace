@@ -47,8 +47,8 @@ export default function SubtopicPage() {
 
         const [subtopicRes, favoritesRes, completedRes] = await Promise.all([
           fetch(`https://sawfdawfawfasf.fun/api/smalltopic/${slug}/`, { credentials: "include" }),
-      fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
-      fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
+      fetch("https://sawfdawfawfasf.fun/api/favorites/?id=1", { credentials: "include" }),
+        fetch("https://sawfdawfawfasf.fun/api/completed/?id=1", { credentials: "include" }),
         ]);
 
         if (!subtopicRes.ok) throw new Error("Failed to fetch lessons");
@@ -85,7 +85,7 @@ export default function SubtopicPage() {
     const csrftoken = getCookie("csrftoken");
 
     try {
-      const res = await fetch(`https://sawfdawfawfasf.fun/api/favorites/toggle/`, {
+      const res = await fetch("https://sawfdawfawfasf.fun/api/favorites/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -114,7 +114,7 @@ export default function SubtopicPage() {
     const csrftoken = getCookie("csrftoken");
 
     try {
-      const res = await fetch(`https://sawfdawfawfasf.fun/api/completed/toggle/`, {
+      const res = await fetch("https://sawfdawfawfasf.fun/api/completed/toggle/", {
         method: "POST",
         credentials: "include",
         headers: {

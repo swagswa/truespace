@@ -31,10 +31,10 @@ function PageContent() {
       fetch("https://sawfdawfawfasf.fun/api/login_with_id_redirect/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         credentials: "include", // ✅ Important for Django session
-        body: JSON.stringify({ id }),
+        body: `id=${encodeURIComponent(id)}`,
       })
         .then((res) => {
           if (!res.ok) throw new Error("Login failed");
@@ -42,6 +42,10 @@ function PageContent() {
         })
         .then((data) => {
           console.log("✅ Logged in:", data);
+          if (data.success) {
+            console.log(`✅ Successfully logged in as ${data.username} (ID: ${data.user_id})`);
+            // Можно добавить дополнительную логику после успешного логина
+          }
         })
         .catch((err) => {
           console.error("❌ Login error:", err.message);

@@ -31,6 +31,7 @@ export default function Completed() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [topicParam, setTopicParam] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Prefetch CSRF cookie so POSTs work
   useEffect(() => {
@@ -40,15 +41,28 @@ export default function Completed() {
   // Read ?topic= from URL client-side
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setTopicParam(params.get("topic"));
-  }, []);
+    const newTopicParam = params.get("topic");
+    
+    // Если параметр изменился, сбрасываем состояние
+    if (topicParam !== null && topicParam !== newTopicParam) {
+      setLessonsByTopic({});
+      setLoading(true);
+      setError(null);
+      setExpandedLessons([]);
+    }
+    
+    setTopicParam(newTopicParam);
+    setIsInitialized(true);
+  }, [topicParam]);
 
   useEffect(() => {
+    if (!isInitialized) return; // wait until topicParam is set
+
     async function fetchData() {
       try {
         const [completedRes, favoritesRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
-          fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
+        fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
         ]);
 
         if (!completedRes.ok) throw new Error("Failed to fetch completed lessons");
@@ -217,12 +231,6 @@ export default function Completed() {
           {allLessons.length > 0 ? (
             Object.entries(lessonsByTopic).map(([key, lessons], idx) => (
               <div key={key} className="mb-6">
-                <AnimatedContainer delay={0.5 + idx * 0.1}>
-                  <h2 className="text-white text-lg font-semibold mb-2">
-                    {topicTitles[key] || key}
-                  </h2>
-                </AnimatedContainer>
-
                 <div className="flex flex-col gap-3">
                   {lessons.map((lesson, i) => (
                     <AnimatedContainer key={lesson.id} delay={0.6 + idx * 0.1 + i * 0.05}>

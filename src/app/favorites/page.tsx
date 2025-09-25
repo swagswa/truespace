@@ -31,12 +31,24 @@ export default function Favorites() {
   const [error, setError] = useState<string | null>(null);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
   const [topicParam, setTopicParam] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Get topic query param from URL (client-side)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setTopicParam(params.get("topic"));
-  }, []);
+    const newTopicParam = params.get("topic");
+    
+    // Если параметр изменился, сбрасываем состояние
+    if (topicParam !== null && topicParam !== newTopicParam) {
+      setLessonsByCategory({});
+      setLoading(true);
+      setError(null);
+      setExpandedLessons([]);
+    }
+    
+    setTopicParam(newTopicParam);
+    setIsInitialized(true);
+  }, [topicParam]);
 
   // Prefetch CSRF token
   useEffect(() => {
@@ -44,13 +56,13 @@ export default function Favorites() {
   }, []);
 
   useEffect(() => {
-    if (topicParam === null) return; // wait until topicParam is set
+    if (!isInitialized || topicParam === null) return; // wait until topicParam is set
 
     async function fetchData() {
       try {
         const [favoritesRes, completedRes] = await Promise.all([
           fetch("https://sawfdawfawfasf.fun/api/favorites/", { credentials: "include" }),
-          fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
+        fetch("https://sawfdawfawfasf.fun/api/completed/", { credentials: "include" }),
         ]);
 
         if (!favoritesRes.ok) throw new Error("Failed to fetch favorite lessons");
@@ -210,12 +222,6 @@ export default function Favorites() {
           {allLessons.length > 0 ? (
             filteredCategories.map(([key, lessons], idx) => (
               <div key={key} className="mb-6">
-                <AnimatedContainer delay={0.5 + idx * 0.1}>
-                  <h2 className="text-white text-lg font-semibold mb-2">
-                    {categoryTitles[key] || key}
-                  </h2>
-                </AnimatedContainer>
-
                 <div className="flex flex-col gap-3">
                   {lessons.map((lesson, i) => (
                     <AnimatedContainer key={lesson.id} delay={0.6 + idx * 0.1 + i * 0.05}>
@@ -224,6 +230,7 @@ export default function Favorites() {
                           id: lesson.id.toString(),
                           title: lesson.lessonName,
                           description: lesson.lessonDescription,
+                          lessonLink: lesson.lessonLink,
                           isExpanded: expandedLessons.includes(lesson.id),
                         }}
                         lessonNumber={i + 1}
