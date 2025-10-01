@@ -85,14 +85,13 @@ function PageContent() {
         {/* Header */}
         <div className="text-center mb-6">
           <AnimatedContainer delay={0}>
-            <Link href="/admin" className="block mb-2 cursor-pointer">
+            <div className="block mb-2">
               <motion.img
                 src="/logo.svg"
                 alt="TrueSpace Logo"
                 className="w-24 h-24 mx-auto filter brightness-0 invert"
-                whileHover={{ scale: 1.1, rotate: 12 }}
               />
-            </Link>
+            </div>
           </AnimatedContainer>
           <AnimatedContainer delay={0.2} direction="up">
             <h1 className="text-2xl font-bold text-white mb-2">TrueSpace</h1>
